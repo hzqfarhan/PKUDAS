@@ -16,7 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
       <OnboardingGuard>
-        <div className="flex w-full min-h-screen relative">
+        <div className="flex flex-col md:flex-row w-full min-h-screen relative">
           <Sidebar />
           <div className="flex flex-col flex-1 min-w-0">
             <main className="flex-1 p-4 md:p-8 shrink-0 relative z-0">{children}</main>
