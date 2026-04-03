@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth/auth-context';
 import { mockUpdateProfile } from '@/lib/mock-data';
 
 export default function OnboardingPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, refreshSession } = useAuth();
   const router = useRouter();
 
   const [matricNumber, setMatricNumber] = useState('');
@@ -45,8 +45,9 @@ export default function OnboardingPage() {
 
       if (!updated) throw new Error('Failed to update profile');
 
-      // Force a reload to update context securely (in reality, we would mutate auth context)
-      window.location.href = '/';
+      // Update auth context state to reflect changes instead of hard reload which resets mock memory
+      refreshSession();
+      router.push('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       setIsSubmitting(false);

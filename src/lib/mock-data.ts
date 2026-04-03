@@ -260,6 +260,35 @@ export function mockSetCurrentUser(userId: string): void {
   currentUserId = userId;
 }
 
+export function mockGoogleLogin(): { user: MockUser | null; error: string | null } {
+  // Try to find users with a mock google email, or just create a new one.
+  const email = 'google_user@student.uthm.edu.my';
+  let user = users.find(u => u.email === email);
+  if (!user) {
+    const id = genId();
+    user = {
+      id,
+      email,
+      password: 'google_mock_password',
+      profile: {
+        id,
+        role: 'user',
+        full_name: 'Google User',
+        email,
+        matric_number: null,
+        faculty: null,
+        affiliation_type: null, // intentionally null to trigger onboarding
+        phone: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }
+    };
+    users.push(user);
+  }
+  currentUserId = user.id;
+  return { user, error: null };
+}
+
 // ============================================================================
 // PROFILE OPERATIONS
 // ============================================================================

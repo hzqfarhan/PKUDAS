@@ -27,6 +27,8 @@ interface AuthContextType {
   isAdmin: boolean;
   isStaff: boolean;
   isUser: boolean;
+  refreshSession: () => void;
+  loginWithGoogle: () => Promise<{ error: string | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -74,6 +76,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: null };
   }, []);
 
+  const loginWithGoogle = useCallback(async () => {
+    // We simulate a Google login by automatically creating or choosing a dummy user
+    const result = (await import('@/lib/mock-data')).mockGoogleLogin();
+    if (result.error || !result.user) {
+      return { error: result.error || 'Google login failed' };
+    }
+    const authUser: AuthUser = {
+      id: result.user.id,
+      email: result.user.email,
+      profile: result.user.profile,
+    };
+    setUser(authUser);
+    localStorage.setItem(SESSION_KEY, JSON.stringify(result.user.id));
+    return { error: null };
+  }, []);
+
+
+
   const signup = useCallback(
     async (
       email: string,
@@ -106,13 +126,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(SESSION_KEY);
   }, []);
 
+  const refreshSession = useCallback(() => {
+    const mockUser = mockGetCurrentUser();
+    if (mockUser) {
+      setUser({
+        id: mockUser.id,
+        email: mockUser.email,
+        profile: mockUser.profile,
+      });
+    }
+  }, []);
+
   const isAdmin = user?.profile.role === 'admin';
   const isStaff = user?.profile.role === 'staff';
   const isUser = user?.profile.role === 'user';
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, login, signup, logout, isAdmin, isStaff, isUser }}
+      value={{ user, loading, login, loginWithGoogle, signup, logout, refreshSession, isAdmin, isStaff, isUser }}
     >
       {children}
     </AuthContext.Provider>
