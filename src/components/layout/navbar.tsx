@@ -16,6 +16,7 @@ export function Navbar() {
     ? [
         { href: '/', label: 'Availability', show: true },
         { href: '/my-appointments', label: 'My Appointments', show: !isAdminOrStaff },
+        { href: '/profile', label: 'Profile', show: true },
         { href: '/admin', label: 'Dashboard', show: isAdminOrStaff },
         { href: '/admin/appointments', label: 'Appointments', show: isAdminOrStaff },
         { href: '/admin/blocks', label: 'Blocked Slots', show: isAdminOrStaff },

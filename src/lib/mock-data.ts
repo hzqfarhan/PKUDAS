@@ -123,7 +123,29 @@ const DEMO_PATIENTS: MockUser[] = [
 // DATA STORES
 // ============================================================================
 
-let users: MockUser[] = [DEMO_ADMIN, DEMO_STAFF, ...DEMO_PATIENTS];
+const USERS_STORAGE_KEY = 'pkudas_mock_users';
+
+function loadUsers(): MockUser[] {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem(USERS_STORAGE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        // ignore
+      }
+    }
+  }
+  return [DEMO_ADMIN, DEMO_STAFF, ...DEMO_PATIENTS];
+}
+
+function saveUsers(currentUsers: MockUser[]) {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(currentUsers));
+  }
+}
+
+let users: MockUser[] = loadUsers();
 
 // Availability rules — weekday clinic hours Mon-Fri
 let availabilityRules: AvailabilityRule[] = [1, 2, 3, 4, 5].map((day) => ({
@@ -243,6 +265,7 @@ export function mockSignup(
     },
   };
   users.push(newUser);
+  saveUsers(users);
   currentUserId = id;
   return { user: newUser, error: null };
 }
@@ -284,6 +307,7 @@ export function mockGoogleLogin(): { user: MockUser | null; error: string | null
       }
     };
     users.push(user);
+    saveUsers(users);
   }
   currentUserId = user.id;
   return { user, error: null };
@@ -302,6 +326,7 @@ export function mockUpdateProfile(userId: string, updates: Partial<Profile>): Pr
   const user = users.find((u) => u.id === userId);
   if (!user) return null;
   user.profile = { ...user.profile, ...updates, updated_at: new Date().toISOString() };
+  saveUsers(users);
   return user.profile;
 }
 
