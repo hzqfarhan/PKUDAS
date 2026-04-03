@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-glass: var(--glass);
+  --color-glass-strong: var(--glass-strong);
+  --color-glass-border: var(--glass-border);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-fg);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-fg);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  /* e-Dent Liquid Glass Palette */
+  --background: #DCE3E7;
+  --surface: #F6F7F7;
+  --glass: rgba(246, 247, 247, 0.55);
+  --glass-strong: rgba(255, 255, 255, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.45);
+  
+  --primary: #05384C;
+  --primary-hover: #0B5B73;
+  --primary-fg: #ffffff;
+  
+  --foreground: #17323B;
+  --foreground-muted: #5F7279;
+  
+  --muted: #9DB7C3;
+  --muted-fg: #5F7279;
+  
+  --border: rgba(95, 114, 121, 0.2);
+  --ring: #05384C;
+  
+  --destructive: #d93838;
+  --success: #2e8c4a;
+  --warning: #cc8500;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) transparent;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Slot status colors */
+.slot-available {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  border-color: #86efac;
+  color: #166534;
+}
+
+.slot-limited {
+  background: linear-gradient(135deg, #fef9c3, #fef08a);
+  border-color: #fde047;
+  color: #854d0e;
+}
+
+.slot-full {
+  background: linear-gradient(135deg, #fecaca, #fca5a5);
+  border-color: #f87171;
+  color: #991b1b;
+}
+
+.slot-blocked {
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  border-color: #94a3b8;
+  color: #475569;
+}
+
+.slot-past {
+  background: var(--muted);
+  border-color: var(--border);
+  color: var(--muted-fg);
+  opacity: 0.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  .slot-available {
+    background: linear-gradient(135deg, #052e16, #064e3b);
+    border-color: #16a34a;
+    color: #86efac;
+  }
+  .slot-limited {
+    background: linear-gradient(135deg, #422006, #713f12);
+    border-color: #ca8a04;
+    color: #fef08a;
+  }
+  .slot-full {
+    background: linear-gradient(135deg, #450a0a, #7f1d1d);
+    border-color: #dc2626;
+    color: #fca5a5;
+  }
+  .slot-blocked {
+    background: linear-gradient(135deg, #1e293b, #334155);
+    border-color: #475569;
+    color: #94a3b8;
+  }
+}
+
+/* Toast animations */
+@keyframes slide-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-out {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+/* Pulse animation for live indicator */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Card hover */
+.card-hover {
+  transition: all 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .card-hover:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+}

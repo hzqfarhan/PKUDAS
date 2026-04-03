@@ -1,0 +1,26 @@
+{
+  "name": "e-Dent | UTHM Dental Appointment System",
+  "short_name": "e-Dent",
+  "id": "/",
+  "description": "Book dental appointments at Pusat Kesihatan Universiti, UTHM",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#DCE3E7",
+  "theme_color": "#DCE3E7",
+  "orientation": "portrait-primary",
+  "categories": ["health", "medical"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
