@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth/auth-context';
 
@@ -36,10 +37,8 @@ export function Sidebar() {
     <div className="flex flex-col h-full bg-glass backdrop-blur-xl border-r border-glass-border shadow-sm">
       <div className={`p-4 flex items-center justify-between ${isCollapsed ? 'justify-center' : ''}`}>
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary flex shrink-0 items-center justify-center shadow-md">
-            <svg className="w-6 h-6 text-primary-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+          <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+            <Image src="/branding/uthm-logo.png" alt="UTHM Logo" width={40} height={40} className="object-contain" priority />
           </div>
           {!isCollapsed && (
              <div className="flex flex-col">
@@ -129,10 +128,8 @@ export function Sidebar() {
       {/* Mobile top bar toggle */}
       <div className="md:hidden sticky top-0 z-40 bg-glass backdrop-blur-xl border-b border-glass-border px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <svg className="w-5 h-5 text-primary-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+          <div className="w-8 h-8 flex items-center justify-center">
+            <Image src="/branding/uthm-logo.png" alt="UTHM Logo" width={32} height={32} className="object-contain" priority />
           </div>
           <span className="font-bold text-foreground text-lg tracking-tight">e-Dent</span>
         </Link>

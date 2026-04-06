@@ -42,7 +42,7 @@ export default function RootLayout({
       <body className="min-h-screen flex text-foreground font-sans relative">
         <div 
           className="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat opacity-40 mix-blend-multiply" 
-          style={{ backgroundImage: 'url(/images/backgrounds/uthm-clinic-bg-placeholder.svg)' }} 
+          style={{ backgroundImage: 'url(/images/backgrounds/backgrounddent.jpg)' }} 
         />
         {/* Soft frost overlay directly on the background */}
         <div className="fixed inset-0 -z-10 bg-background/80 backdrop-blur-[6px]" />

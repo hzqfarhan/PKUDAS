@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth/auth-context';
 import { useState } from 'react';
@@ -31,10 +32,8 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-              <svg className="w-5 h-5 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+            <div className="w-9 h-9 flex items-center justify-center">
+              <Image src="/branding/uthm-logo.png" alt="UTHM Logo" width={36} height={36} className="object-contain drop-shadow-sm group-hover:drop-shadow-md transition-all" priority />
             </div>
             <div className="hidden sm:block">
               <span className="font-bold text-foreground text-lg tracking-tight">e-Dent</span>
