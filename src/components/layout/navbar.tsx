@@ -31,13 +31,13 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 flex items-center justify-center">
-              <Image src="/branding/uthm-logo.png" alt="UTHM Logo" width={36} height={36} className="object-contain drop-shadow-sm group-hover:drop-shadow-md transition-all" priority />
+          <Link href="/" className="flex items-center gap-4 group">
+            <div className="flex items-center justify-center h-12">
+              <Image src="/branding/uthm-logo.png" alt="UTHM Logo" width={160} height={48} className="object-contain w-auto h-full drop-shadow-sm group-hover:drop-shadow-md transition-all" priority />
             </div>
-            <div className="hidden sm:block">
-              <span className="font-bold text-foreground text-lg tracking-tight">e-Dent</span>
-              <span className="text-[10px] text-muted-foreground block -mt-0.5 tracking-wide">PKU UTHM Clinic</span>
+            <div className="hidden sm:block border-l border-border pl-4">
+              <span className="font-bold text-foreground text-lg tracking-tight block">e-Dent</span>
+              <span className="text-[10px] text-muted-foreground block -mt-0.5 tracking-wide uppercase">PKU UTHM Clinic</span>
             </div>
           </Link>
 

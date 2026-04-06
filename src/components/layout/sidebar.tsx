@@ -36,14 +36,14 @@ export function Sidebar() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-glass backdrop-blur-xl border-r border-glass-border shadow-sm">
       <div className={`p-4 flex items-center justify-between ${isCollapsed ? 'justify-center' : ''}`}>
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 shrink-0 flex items-center justify-center">
-            <Image src="/branding/uthm-logo.png" alt="UTHM Logo" width={40} height={40} className="object-contain" priority />
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className={`shrink-0 flex items-center justify-center ${isCollapsed ? 'h-8' : 'h-10'}`}>
+            <Image src="/branding/uthm-logo.png" alt="UTHM Logo" width={120} height={40} className="object-contain w-auto h-full drop-shadow-sm group-hover:drop-shadow-md transition-all" priority />
           </div>
           {!isCollapsed && (
-             <div className="flex flex-col">
-               <span className="font-bold text-foreground text-xl tracking-tight">e-Dent</span>
-               <span className="text-[10px] text-foreground-muted uppercase tracking-wider">PKU UTHM Clinic</span>
+             <div className="flex flex-col border-l border-glass-border pl-3">
+               <span className="font-bold text-foreground text-xl tracking-tight leading-tight">e-Dent</span>
+               <span className="text-[10px] text-foreground-muted uppercase tracking-wider">PKU Clinic</span>
              </div>
           )}
         </Link>
@@ -127,11 +127,11 @@ export function Sidebar() {
     <>
       {/* Mobile top bar toggle */}
       <div className="md:hidden sticky top-0 z-40 bg-glass backdrop-blur-xl border-b border-glass-border px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 flex items-center justify-center">
-            <Image src="/branding/uthm-logo.png" alt="UTHM Logo" width={32} height={32} className="object-contain" priority />
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="h-8 flex items-center justify-center">
+            <Image src="/branding/uthm-logo.png" alt="UTHM Logo" width={100} height={32} className="object-contain w-auto h-full drop-shadow-sm group-hover:drop-shadow-md transition-all" priority />
           </div>
-          <span className="font-bold text-foreground text-lg tracking-tight">e-Dent</span>
+          <span className="font-bold text-foreground text-lg tracking-tight border-l border-glass-border pl-3 group-hover:text-primary transition-colors">e-Dent</span>
         </Link>
         <button
           className="p-2 rounded-xl border border-glass-border bg-glass-strong focus:outline-none focus:ring-2 focus:ring-primary"
