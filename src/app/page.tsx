@@ -6,6 +6,16 @@ import { useAuth } from '@/lib/auth/auth-context';
 import { mockGetDayAvailability } from '@/lib/mock-data';
 import { getWeekDates, getWeekRange, formatDateShort, formatDayName, formatTime12h, todayDateStr, addWeeks, isPastDate } from '@/lib/utils/date';
 import type { DayAvailability, TimeSlot } from '@/types/database';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Calendar, 
+  ClipboardList, 
+  Info, 
+  MapPin, 
+  Key,
+  ArrowRight
+} from 'lucide-react';
 
 function StatusLegend() {
   return (
@@ -142,11 +152,9 @@ export default function HomePage() {
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={() => setWeekOffset((w) => w - 1)}
-          className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors"
+          className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors text-[#FFFFFF]"
         >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <ChevronLeft size={16} color="#FFFFFF" strokeWidth={2.5} />
           Previous
         </button>
 
@@ -166,12 +174,10 @@ export default function HomePage() {
 
         <button
           onClick={() => setWeekOffset((w) => w + 1)}
-          className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors"
+          className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors text-[#FFFFFF]"
         >
           Next
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <ChevronRight size={16} color="#FFFFFF" strokeWidth={2.5} />
         </button>
       </div>
 
@@ -199,9 +205,7 @@ export default function HomePage() {
       <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-6 hover:-translate-y-1 transition-transform duration-200">
           <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-4 shadow-md">
-            <svg className="w-6 h-6 text-primary-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
+            <Calendar size={24} color="white" strokeWidth={2} />
           </div>
           <h3 className="font-semibold text-foreground mb-1 text-lg">Book Appointment</h3>
           <p className="text-sm text-foreground-muted mb-4">Select a date above to view available slots and book instantly.</p>
@@ -213,9 +217,7 @@ export default function HomePage() {
         {user && (
           <Link href="/my-appointments" className="block rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-6 hover:-translate-y-1 transition-transform duration-200">
             <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-4 shadow-md">
-              <svg className="w-6 h-6 text-primary-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
+              <ClipboardList size={24} color="white" strokeWidth={2} />
             </div>
             <h3 className="font-semibold text-foreground mb-1 text-lg">My Appointments</h3>
             <p className="text-sm text-foreground-muted">View, manage, or cancel your upcoming appointments.</p>
@@ -224,9 +226,7 @@ export default function HomePage() {
 
         <div className="rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-6 hover:-translate-y-1 transition-transform duration-200">
           <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-4 shadow-md">
-            <svg className="w-6 h-6 text-primary-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <Info size={24} color="white" strokeWidth={2} />
           </div>
           <h3 className="font-semibold text-foreground mb-1 text-lg">Clinic Info</h3>
           <p className="text-sm text-foreground-muted">
@@ -241,10 +241,7 @@ export default function HomePage() {
         <div className="rounded-[28px] overflow-hidden border border-glass-border shadow-lg bg-surface flex flex-col md:flex-row">
           <div className="md:w-1/3 p-8 flex flex-col justify-center">
             <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-4 shadow-md">
-              <svg className="w-6 h-6 text-primary-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+              <MapPin size={24} color="white" strokeWidth={2} />
             </div>
             <h3 className="text-xl font-bold text-foreground mb-2">Pusat Kesihatan Universiti (PKU)</h3>
             <p className="text-foreground-muted mb-6">
@@ -280,9 +277,7 @@ export default function HomePage() {
       {!user && (
         <div className="mt-10 rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-8">
           <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-            <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-            </svg>
+            <Key size={20} color="white" strokeWidth={2} />
             Demo Accounts
           </h3>
           <div className="grid sm:grid-cols-3 gap-4 text-sm">

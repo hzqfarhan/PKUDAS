@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth/auth-context';
 import { toast } from 'sonner';
+import { Clock } from 'lucide-react';
 
 export default function LoginPage() {
   const { login, loginWithGoogle } = useAuth();
@@ -46,9 +47,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <svg className="w-6 h-6 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <Clock size={24} color="white" strokeWidth={2.5} />
           </div>
           <h2 className="text-2xl font-bold text-foreground">Welcome to e-Dent</h2>
           <p className="text-sm text-muted-foreground mt-2">Log in to manage your appointments</p>

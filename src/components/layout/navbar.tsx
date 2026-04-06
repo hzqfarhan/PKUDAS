@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth/auth-context';
 import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
 
 export function Navbar() {
   const { user, logout, isAdmin, isStaff } = useAuth();
@@ -92,17 +93,11 @@ export function Navbar() {
 
             {/* Mobile menu button */}
             <button
-              className="md:hidden p-2 rounded-lg hover:bg-muted"
+              className="md:hidden p-2 rounded-lg hover:bg-muted text-[#FFFFFF]"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle menu"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                {mobileOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
+              {mobileOpen ? <X size={20} color="#FFFFFF" /> : <Menu size={20} color="#FFFFFF" />}
             </button>
           </div>
         </div>

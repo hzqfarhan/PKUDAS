@@ -5,6 +5,18 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth/auth-context';
+import { 
+  Calendar, 
+  ClipboardList, 
+  LayoutDashboard, 
+  User, 
+  LogOut, 
+  ChevronLeft, 
+  ChevronRight,
+  Menu,
+  X,
+  LogIn
+} from 'lucide-react';
 
 export function Sidebar() {
   const { user, logout, isAdmin, isStaff } = useAuth();
@@ -16,10 +28,10 @@ export function Sidebar() {
 
   const navLinks = user
     ? [
-        { href: '/', label: 'Availability', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', show: true },
-        { href: '/my-appointments', label: 'My Appointments', icon: 'M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', show: !isAdminOrStaff },
-        { href: '/admin', label: 'Dashboard', icon: 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z', show: isAdminOrStaff },
-        { href: '/profile', label: 'Profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', show: true },
+        { href: '/', label: 'Availability', icon: Calendar, show: true },
+        { href: '/my-appointments', label: 'My Appointments', icon: ClipboardList, show: !isAdminOrStaff },
+        { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, show: isAdminOrStaff },
+        { href: '/profile', label: 'Profile', icon: User, show: true },
       ].filter((l) => l.show)
     : [];
 
@@ -47,10 +59,8 @@ export function Sidebar() {
              </div>
           )}
         </Link>
-        <button className="hidden md:block text-muted-foreground hover:text-foreground opacity-50 hover:opacity-100 transition-opacity" onClick={toggleSidebar}>
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            {isCollapsed ? <path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" /> : <path strokeLinecap="round" strokeLinejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />}
-          </svg>
+        <button className="hidden md:block text-white/50 hover:text-[#FFFFFF] transition-opacity" onClick={toggleSidebar}>
+          {isCollapsed ? <ChevronRight size={20} color="#FFFFFF" /> : <ChevronLeft size={20} color="#FFFFFF" />}
         </button>
       </div>
 
@@ -67,9 +77,7 @@ export function Sidebar() {
               }`}
               title={isCollapsed ? link.label : undefined}
             >
-              <svg className={`shrink-0 ${isCollapsed ? 'w-6 h-6' : 'w-5 h-5 mr-3'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d={link.icon} />
-              </svg>
+              <link.icon className={`shrink-0 ${isCollapsed ? 'w-6 h-6' : 'w-5 h-5 mr-3'}`} strokeWidth={2.5} color="#FFFFFF" />
               {!isCollapsed && <span>{link.label}</span>}
             </Link>
           );
@@ -92,9 +100,7 @@ export function Sidebar() {
               }`}
               title={isCollapsed ? "Logout" : undefined}
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
+              <LogOut className="w-5 h-5" strokeWidth={2} color="#FFFFFF" />
               {!isCollapsed && <span>Logout</span>}
             </button>
           </div>
@@ -111,10 +117,8 @@ export function Sidebar() {
               </>
             )}
             {isCollapsed && (
-               <Link href="/login" title="Login" className="p-2 flex justify-center text-primary bg-primary/10 rounded-xl">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                  </svg>
+               <Link href="/login" title="Login" className="p-2 flex justify-center text-[#FFFFFF] bg-primary/20 rounded-xl">
+                  <LogIn className="w-5 h-5" strokeWidth={2} color="#FFFFFF" />
                </Link>
             )}
           </div>
@@ -134,12 +138,10 @@ export function Sidebar() {
           <span className="font-bold text-foreground text-lg tracking-tight border-l border-glass-border pl-3 group-hover:text-primary transition-colors">e-Dent</span>
         </Link>
         <button
-          className="p-2 rounded-xl border border-glass-border bg-glass-strong focus:outline-none focus:ring-2 focus:ring-primary"
+          className="p-2 rounded-xl border border-glass-border bg-glass-strong focus:outline-none focus:ring-2 focus:ring-primary text-[#FFFFFF]"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
-          <svg className="w-6 h-6 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            {mobileOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /> : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
-          </svg>
+          {mobileOpen ? <X size={24} color="#FFFFFF" /> : <Menu size={24} color="#FFFFFF" />}
         </button>
       </div>
 

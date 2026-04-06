@@ -8,6 +8,7 @@ import { formatDateDisplay, formatTime12h, isPastDate, todayDateStr } from '@/li
 import type { DayAvailability, TimeSlot } from '@/types/database';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { ChevronLeft, CheckCircle, XCircle } from 'lucide-react';
 
 export default function BookPage() {
   const params = useParams();
@@ -62,9 +63,7 @@ export default function BookPage() {
       {/* Header */}
       <div className="mb-8">
         <Link href="/" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <ChevronLeft size={16} color="white" />
           Back to availability
         </Link>
         <h1 className="text-2xl font-bold text-foreground">
@@ -158,9 +157,7 @@ export default function BookPage() {
           {selectedSlot && user && (
             <div className="mt-6 rounded-[24px] border border-primary/30 bg-primary/5 p-6 backdrop-blur-md shadow-sm">
               <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <CheckCircle size={20} color="white" strokeWidth={2} />
                 Confirm Booking
               </h3>
               <div className="grid sm:grid-cols-2 gap-4 mb-4 text-sm bg-surface/50 rounded-xl p-4 border border-glass-border">
@@ -229,9 +226,7 @@ export default function BookPage() {
       ) : dayData?.totalSlots === 0 ? (
         <div className="rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-10 text-center shadow-sm">
           <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center mx-auto mb-4 border border-glass-border shadow-sm">
-            <svg className="w-8 h-8 text-foreground-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <XCircle size={32} color="white" strokeWidth={1.5} />
           </div>
           <h3 className="font-semibold text-foreground mb-1 text-lg">Clinic Closed</h3>
           <p className="text-sm text-foreground-muted">No appointments available on this day (weekend or holiday).</p>

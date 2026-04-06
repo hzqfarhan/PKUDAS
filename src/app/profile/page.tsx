@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { formatDateDisplay, formatTime12h, todayDateStr } from '@/lib/utils/date';
 import type { Appointment } from '@/types/database';
 import Link from 'next/link';
+import { User, Calendar } from 'lucide-react';
 
 export default function ProfilePage() {
   const { user, loading, refreshSession } = useAuth();
@@ -90,9 +91,7 @@ export default function ProfilePage() {
         <div className="rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-8 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-              <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
+              <User size={20} color="white" strokeWidth={2} />
               Personal Details
             </h2>
             {!isEditing && (
@@ -239,9 +238,7 @@ export default function ProfilePage() {
         <div className="flex flex-col gap-6">
           <div className="rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-8 shadow-sm">
             <h2 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-6">
-              <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
+              <Calendar size={20} color="white" strokeWidth={2} />
               Current Bookings
             </h2>
             
