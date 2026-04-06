@@ -8,6 +8,7 @@ import type { Appointment } from '@/types/database';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Calendar, Clock } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
   booked: 'bg-info/20 text-info border border-info/30',
@@ -85,9 +86,7 @@ export default function MyAppointmentsPage() {
         {upcoming.length === 0 ? (
           <div className="rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-10 text-center shadow-sm">
             <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center mx-auto mb-4 border border-glass-border shadow-sm">
-              <svg className="w-8 h-8 text-foreground-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
+              <Calendar size={32} color="white" strokeWidth={1.5} />
             </div>
             <p className="text-foreground-muted">No upcoming appointments.</p>
             <Link href="/" className="inline-block mt-4 text-sm text-primary font-medium hover:underline">
@@ -101,9 +100,7 @@ export default function MyAppointmentsPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0 shadow-md">
-                      <svg className="w-6 h-6 text-primary-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
+                      <Clock size={24} color="white" strokeWidth={2} />
                     </div>
                     <div>
                       <p className="font-semibold text-foreground text-lg">{formatDateDisplay(appt.appointment_date)}</p>
