@@ -30,8 +30,8 @@ export function Sidebar() {
     ? [
         { href: '/', label: 'Availability', icon: Calendar, show: true },
         { href: '/my-appointments', label: 'My Appointments', icon: ClipboardList, show: !isAdminOrStaff },
-        { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, show: isAdminOrStaff },
-        { href: '/profile', label: 'Profile', icon: User, show: true },
+        { href: '/admin', label: 'Admin Panel', icon: LayoutDashboard, show: isAdminOrStaff },
+        { href: '/dashboard', label: 'Dashboard', icon: User, show: true },
       ].filter((l) => l.show)
     : [];
 
@@ -88,9 +88,22 @@ export function Sidebar() {
         {user ? (
           <div className={`flex flex-col ${isCollapsed ? 'items-center' : ''} gap-3`}>
             {!isCollapsed && (
-              <div className="text-left px-2">
-                <p className="text-sm font-semibold text-foreground truncate">{user.profile.full_name}</p>
-                <p className="text-xs text-muted-foreground truncate uppercase">{user.profile.role}</p>
+              <div className="flex items-center gap-3 px-2">
+                {user.profile.avatar_url ? (
+                  <img
+                    src={user.profile.avatar_url}
+                    alt=""
+                    className="w-9 h-9 rounded-xl object-cover border border-glass-border shadow-sm"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center border border-glass-border">
+                    <User size={16} color="#FFFFFF" className="opacity-60" />
+                  </div>
+                )}
+                <div className="text-left min-w-0">
+                  <p className="text-sm font-semibold text-foreground truncate">{user.profile.full_name}</p>
+                  <p className="text-xs text-muted-foreground truncate uppercase">{user.profile.role}</p>
+                </div>
               </div>
             )}
             <button

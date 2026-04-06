@@ -42,6 +42,7 @@ const DEMO_ADMIN: MockUser = {
     faculty: null,
     affiliation_type: 'uthm_staff',
     phone: '+60127001001',
+    avatar_url: null,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
   },
@@ -60,6 +61,7 @@ const DEMO_STAFF: MockUser = {
     faculty: null,
     affiliation_type: 'uthm_staff',
     phone: '+60127001002',
+    avatar_url: null,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
   },
@@ -79,6 +81,7 @@ const DEMO_PATIENTS: MockUser[] = [
       faculty: 'FSKTM',
       affiliation_type: 'student',
       phone: '+60121234567',
+      avatar_url: null,
       created_at: '2024-01-15T00:00:00Z',
       updated_at: '2024-01-15T00:00:00Z',
     },
@@ -96,6 +99,7 @@ const DEMO_PATIENTS: MockUser[] = [
       faculty: 'FKEE',
       affiliation_type: 'student',
       phone: '+60129876543',
+      avatar_url: null,
       created_at: '2024-02-01T00:00:00Z',
       updated_at: '2024-02-01T00:00:00Z',
     },
@@ -113,6 +117,7 @@ const DEMO_PATIENTS: MockUser[] = [
       faculty: 'FPTV',
       affiliation_type: 'student',
       phone: '+60125551234',
+      avatar_url: null,
       created_at: '2024-02-15T00:00:00Z',
       updated_at: '2024-02-15T00:00:00Z',
     },
@@ -260,6 +265,7 @@ export function mockSignup(
       faculty: faculty || null,
       affiliation_type: affiliationType || null,
       phone: phone || null,
+      avatar_url: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     },
@@ -302,6 +308,7 @@ export function mockGoogleLogin(): { user: MockUser | null; error: string | null
         faculty: null,
         affiliation_type: null, // intentionally null to trigger onboarding
         phone: null,
+        avatar_url: 'https://ui-avatars.com/api/?name=Google+User&background=4285F4&color=fff&size=200',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       }
@@ -326,6 +333,15 @@ export function mockUpdateProfile(userId: string, updates: Partial<Profile>): Pr
   const user = users.find((u) => u.id === userId);
   if (!user) return null;
   user.profile = { ...user.profile, ...updates, updated_at: new Date().toISOString() };
+  saveUsers(users);
+  return user.profile;
+}
+
+export function mockUpdateAvatar(userId: string, avatarDataUrl: string | null): Profile | null {
+  const user = users.find((u) => u.id === userId);
+  if (!user) return null;
+  user.profile.avatar_url = avatarDataUrl;
+  user.profile.updated_at = new Date().toISOString();
   saveUsers(users);
   return user.profile;
 }
