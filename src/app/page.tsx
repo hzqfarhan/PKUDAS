@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth/auth-context';
 import { mockGetDayAvailability } from '@/lib/mock-data';
-import { getWeekDates, getWeekRange, formatDateShort, formatDayName, formatTime12h, todayDateStr, addWeeks, isPastDate } from '@/lib/utils/date';
+import { getWeekDates, getWeekRange, formatDateShort, formatDayName, formatTime12h, todayDateStr, addWeeks, isPastDate, isWeekend } from '@/lib/utils/date';
 import type { DayAvailability, TimeSlot } from '@/types/database';
 import { 
   ChevronLeft, 
@@ -114,6 +114,7 @@ export default function HomePage() {
   const { user } = useAuth();
   const today = todayDateStr();
   const [weekOffset, setWeekOffset] = useState(0);
+  const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const [weekDays, setWeekDays] = useState<DayAvailability[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -121,16 +122,27 @@ export default function HomePage() {
   const weekDates = getWeekDates(refDate);
   const weekRange = getWeekRange(refDate);
 
-  const loadWeek = useCallback(() => {
+  const loadSchedule = useCallback(() => {
     setLoading(true);
-    const days = weekDates.map((d) => mockGetDayAvailability(d));
+    const baseDate = weekOffset === 0 ? today : addWeeks(today, weekOffset);
+    let datesToLoad: string[] = [];
+    
+    if (viewMode === 'week') {
+      datesToLoad = getWeekDates(baseDate);
+    } else {
+      for (let i = 0; i < 4; i++) {
+        datesToLoad = datesToLoad.concat(getWeekDates(addWeeks(baseDate, i)));
+      }
+    }
+    
+    const days = datesToLoad.map((d) => mockGetDayAvailability(d));
     setWeekDays(days);
     setLoading(false);
-  }, [weekOffset]);
+  }, [weekOffset, viewMode, today]);
 
   useEffect(() => {
-    loadWeek();
-  }, [loadWeek]);
+    loadSchedule();
+  }, [loadSchedule]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -159,17 +171,27 @@ export default function HomePage() {
         </button>
 
         <div className="text-center">
-          <p className="text-sm font-semibold text-foreground">
-            {formatDateShort(weekRange.start)} – {formatDateShort(weekRange.end)}
+          <p className="text-sm font-semibold text-foreground mb-1">
+            {weekDays.length > 0
+              ? `${formatDateShort(weekDays.filter(d => !isWeekend(d.date))[0]?.date || weekRange.start)} – ${formatDateShort(weekDays.filter(d => !isWeekend(d.date)).slice(-1)[0]?.date || weekRange.end)}`
+              : `${formatDateShort(weekRange.start)} – ${formatDateShort(weekRange.end)}`}
           </p>
-          {weekOffset !== 0 && (
+          <div className="flex items-center justify-center gap-3">
             <button
-              onClick={() => setWeekOffset(0)}
-              className="text-xs text-primary hover:underline mt-0.5"
+              onClick={() => setViewMode(v => v === 'week' ? 'month' : 'week')}
+              className="text-xs font-semibold px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
             >
-              Go to current week
+              {viewMode === 'week' ? 'Show 1 Month' : 'Show 1 Week'}
             </button>
-          )}
+            {weekOffset !== 0 && (
+              <button
+                onClick={() => setWeekOffset(0)}
+                className="text-xs text-primary hover:underline"
+              >
+                Go to current
+              </button>
+            )}
+          </div>
         </div>
 
         <button
@@ -186,35 +208,26 @@ export default function HomePage() {
         <StatusLegend />
       </div>
 
-      {/* Week Grid */}
+      {/* Week/Month Grid */}
       {loading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
-          {Array.from({ length: 7 }).map((_, i) => (
-            <div key={i} className="rounded-xl border border-border p-4 animate-pulse h-48 bg-muted/50" />
+        <div className="flex overflow-x-auto gap-4 pb-6 px-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {Array.from({ length: viewMode === 'week' ? 5 : 20 }).map((_, i) => (
+            <div key={i} className="min-w-[160px] md:min-w-[180px] shrink-0 snap-start rounded-xl border border-border p-4 animate-pulse h-48 bg-muted/50" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
-          {weekDays.map((day) => (
-            <DayCard key={day.date} day={day} isToday={day.date === today} />
+        <div className="flex overflow-x-auto gap-4 pb-6 px-1 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {weekDays.filter(day => !isWeekend(day.date)).map((day) => (
+            <div key={day.date} className="min-w-[160px] md:min-w-[180px] shrink-0 snap-start">
+              <DayCard day={day} isToday={day.date === today} />
+            </div>
           ))}
         </div>
       )}
 
       {/* Quick Actions */}
-      <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div className="rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-6 hover:-translate-y-1 transition-transform duration-200">
-          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-4 shadow-md">
-            <Calendar size={24} color="white" strokeWidth={2} />
-          </div>
-          <h3 className="font-semibold text-foreground mb-1 text-lg">Book Appointment</h3>
-          <p className="text-sm text-foreground-muted mb-4">Select a date above to view available slots and book instantly.</p>
-          <Link href={`/book/${today}`} className="inline-block px-4 py-2 bg-primary hover:bg-primary-hover text-primary-fg text-sm font-medium rounded-full transition-colors">
-            Book for today →
-          </Link>
-        </div>
-
-        {user && (
+      {user && (
+        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <Link href="/my-appointments" className="block rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-6 hover:-translate-y-1 transition-transform duration-200">
             <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-4 shadow-md">
               <ClipboardList size={24} color="white" strokeWidth={2} />
@@ -222,18 +235,8 @@ export default function HomePage() {
             <h3 className="font-semibold text-foreground mb-1 text-lg">My Appointments</h3>
             <p className="text-sm text-foreground-muted">View, manage, or cancel your upcoming appointments.</p>
           </Link>
-        )}
-
-        <div className="rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-6 hover:-translate-y-1 transition-transform duration-200">
-          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-4 shadow-md">
-            <Info size={24} color="white" strokeWidth={2} />
-          </div>
-          <h3 className="font-semibold text-foreground mb-1 text-lg">Clinic Info</h3>
-          <p className="text-sm text-foreground-muted">
-            Open Mon – Fri, 08:00 – 17:00. 30-minute appointments. Walk-ins may have limited availability.
-          </p>
         </div>
-      </div>
+      )}
 
       {/* Map & Location */}
       <div className="mt-12 mb-12">
@@ -273,32 +276,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Demo Credentials */}
-      {!user && (
-        <div className="mt-10 rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-8">
-          <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-            <Key size={20} color="white" strokeWidth={2} />
-            Demo Accounts
-          </h3>
-          <div className="grid sm:grid-cols-3 gap-4 text-sm">
-            <div className="bg-surface rounded-[16px] p-4 border border-glass-border shadow-sm">
-              <p className="font-bold text-foreground mb-1">Admin</p>
-              <p className="text-foreground-muted">admin@pku.uthm.edu.my</p>
-              <p className="text-foreground-muted mt-1 font-mono text-xs">admin123</p>
-            </div>
-            <div className="bg-surface rounded-[16px] p-4 border border-glass-border shadow-sm">
-              <p className="font-bold text-foreground mb-1">Staff</p>
-              <p className="text-foreground-muted">staff@pku.uthm.edu.my</p>
-              <p className="text-foreground-muted mt-1 font-mono text-xs">staff123</p>
-            </div>
-            <div className="bg-surface rounded-[16px] p-4 border border-glass-border shadow-sm">
-              <p className="font-bold text-foreground mb-1">Patient</p>
-              <p className="text-foreground-muted">ahmad@student.uthm.edu.my</p>
-              <p className="text-foreground-muted mt-1 font-mono text-xs">patient123</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
