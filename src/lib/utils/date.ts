@@ -1,4 +1,4 @@
-import { format, parse, addDays, startOfWeek, endOfWeek, isBefore, isAfter, isEqual, parseISO, addMinutes } from 'date-fns';
+import { format, parse, addDays, startOfWeek, endOfWeek, isBefore, isAfter, isEqual, parseISO, addMinutes, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, addMonths } from 'date-fns';
 import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
 
 export const TIMEZONE = 'Asia/Kuala_Lumpur';
@@ -106,4 +106,27 @@ export function addWeeks(dateStr: string, weeks: number): string {
 export function isWeekend(dateStr: string): boolean {
   const day = getWeekday(dateStr);
   return day === 0 || day === 6;
+}
+
+export function getMonthDatesFormatted(referenceDate?: string): { date: string, isCurrentMonth: boolean, isToday: boolean }[] {
+  const ref = referenceDate ? parseISO(referenceDate) : nowInMYT();
+  const start = startOfWeek(startOfMonth(ref), { weekStartsOn: 0 }); // Sunday start
+  const end = endOfWeek(endOfMonth(ref), { weekStartsOn: 0 });
+  
+  const days = eachDayOfInterval({ start, end });
+  const todayStr = todayDateStr();
+  
+  return days.map(d => ({
+    date: format(d, 'yyyy-MM-dd'),
+    isCurrentMonth: isSameMonth(d, ref),
+    isToday: format(d, 'yyyy-MM-dd') === todayStr
+  }));
+}
+
+export function formatMonthYear(dateStr: string): string {
+  return format(parseISO(dateStr), 'MMMM yyyy');
+}
+
+export function addMonthsStr(dateStr: string, amount: number): string {
+  return format(addMonths(parseISO(dateStr), amount), 'yyyy-MM-dd');
 }
