@@ -59,7 +59,7 @@ function DayCard({ day, isToday }: { day: DayAvailability; isToday: boolean }) {
       href={past ? '#' : `/book/${day.date}`}
       className={`block rounded-[24px] border border-glass-border bg-glass backdrop-blur-xl p-5 shadow-sm transition-all ${
         past ? 'opacity-50 cursor-not-allowed' : 'hover:-translate-y-1 hover:shadow-md hover:bg-glass-strong cursor-pointer'
-      } ${isToday ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
+      }`}
     >
       <div className="text-center mb-3">
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -215,14 +215,45 @@ export default function HomePage() {
             </button>
           </>
         ) : (
-          <div className="w-full flex justify-center">
+          <>
             <button
-              onClick={() => setViewMode('week')}
-              className="text-xs font-semibold px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+              onClick={() => setMonthOffset((m) => m - 1)}
+              className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors text-[#FFFFFF]"
             >
-              Show 1 Week
+              <ChevronLeft size={16} color="#FFFFFF" strokeWidth={2.5} />
+              <span className="hidden sm:inline">Prev Month</span>
             </button>
-          </div>
+
+            <div className="text-center flex-1">
+              <p className="text-sm font-semibold text-foreground mb-1">
+                {formatMonthYear(monthOffset === 0 ? today : addMonthsStr(today, monthOffset))}
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <button
+                  onClick={() => setViewMode('week')}
+                  className="text-xs font-semibold px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                >
+                  Show 1 Week
+                </button>
+                {monthOffset !== 0 && (
+                  <button
+                    onClick={() => setMonthOffset(0)}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Go to current
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <button
+              onClick={() => setMonthOffset((m) => m + 1)}
+              className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors text-[#FFFFFF]"
+            >
+              <span className="hidden sm:inline">Next Month</span>
+              <ChevronRight size={16} color="#FFFFFF" strokeWidth={2.5} />
+            </button>
+          </>
         )}
       </div>
 
@@ -249,70 +280,19 @@ export default function HomePage() {
           </div>
         )
       ) : (
-         <div className="max-w-md mx-auto bg-surface/50 border border-border rounded-[24px] p-6 shadow-sm backdrop-blur-md">
-            <div className="flex items-center justify-between mb-4 px-2">
-              <h2 className="text-xl font-bold text-foreground">
-                {formatMonthYear(monthOffset === 0 ? today : addMonthsStr(today, monthOffset))}
-              </h2>
-              <div className="flex gap-2">
-                 <button onClick={() => setMonthOffset(m => m - 1)} className="p-1 hover:bg-muted rounded-md text-foreground transition-colors">
-                   <ChevronLeft size={20} />
-                 </button>
-                 <button onClick={() => setMonthOffset(m => m + 1)} className="p-1 hover:bg-muted rounded-md text-foreground transition-colors">
-                   <ChevronRight size={20} />
-                 </button>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-7 gap-y-2 mb-2">
-              {['S','M','T','W','T','F','S'].map((dl, i) => (
-                <div key={i} className="text-center text-xs font-semibold text-muted-foreground w-10 h-10 flex items-center justify-center m-auto">
-                   {dl}
-                </div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-7 gap-y-2 relative min-h-[250px]">
-              {loading ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-[1px] z-10 rounded-xl">
-                   <span className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></span>
-                </div>
-              ) : null}
-              
-              {monthDays.map((day) => {
-                  const isWknd = isWeekend(day.date);
-                  const isPast = isPastDate(day.date) && !day.isToday;
-                  const isClosed = day.totalSlots === 0 || isWknd;
-                  const isAvailable = day.availableCount > 0;
-                  const isDisabled = isClosed || isPast || !day.isCurrentMonth;
-
-                  return isDisabled ? (
-                    <div key={day.date} className="w-10 h-10 flex flex-col items-center justify-center m-auto relative">
-                      <span className={`text-sm ${day.isCurrentMonth ? 'text-muted-foreground/40' : 'text-transparent'}`}>
-                        {parseInt(day.date.split('-')[2], 10)}
-                      </span>
-                    </div>
-                  ) : (
-                    <Link
-                      key={day.date}
-                      href={`/book/${day.date}`}
-                      className={`w-10 h-10 flex flex-col items-center justify-center rounded-full transition-all m-auto relative group ${
-                        day.isToday 
-                          ? 'bg-primary text-primary-foreground shadow-md' 
-                          : 'hover:bg-primary/20 text-foreground'
-                      } ${!isAvailable && !day.isToday ? 'opacity-50' : ''}`}
-                    >
-                      <span className="text-sm">
-                        {parseInt(day.date.split('-')[2], 10)}
-                      </span>
-                      {isAvailable && !day.isToday && (
-                        <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary opacity-70 group-hover:opacity-100" />
-                      )}
-                    </Link>
-                  );
-                })}
-            </div>
-         </div>
+        loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <div key={i} className="rounded-xl border border-border p-4 animate-pulse h-48 bg-muted/50" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {monthDays.filter(day => !isWeekend(day.date) && day.isCurrentMonth).map((day) => (
+              <DayCard key={day.date} day={day} isToday={day.date === today} />
+            ))}
+          </div>
+        )
       )}
 
       {/* Quick Actions */}
