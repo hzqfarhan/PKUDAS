@@ -171,88 +171,94 @@ export default function HomePage() {
       </div>
 
       {/* Navigator & Modes */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-6 w-full max-w-2xl mx-auto px-4">
         {viewMode === 'week' ? (
           <>
-            <button
-              onClick={() => setWeekOffset((w) => w - 1)}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors text-[#FFFFFF]"
-            >
-              <ChevronLeft size={16} color="#FFFFFF" strokeWidth={2.5} />
-              <span className="hidden sm:inline">Previous</span>
-            </button>
-
-            <div className="text-center flex-1">
-              <p className="text-sm font-semibold text-foreground mb-1">
-                {weekDays.length > 0
-                  ? `${formatDateShort(weekDays.filter(d => !isWeekend(d.date))[0]?.date || weekRange.start)} – ${formatDateShort(weekDays.filter(d => !isWeekend(d.date)).slice(-1)[0]?.date || weekRange.end)}`
-                  : `${formatDateShort(weekRange.start)} – ${formatDateShort(weekRange.end)}`}
-              </p>
-              <div className="flex items-center justify-center gap-3">
-                <button
-                  onClick={() => setViewMode('month')}
-                  className="text-xs font-semibold px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                >
-                  Show 1 Month
-                </button>
-                {weekOffset !== 0 && (
-                  <button
-                    onClick={() => setWeekOffset(0)}
-                    className="text-xs text-primary hover:underline"
-                  >
-                    Go to current
-                  </button>
-                )}
+            <div className="flex items-center justify-between w-full sm:w-auto gap-4 sm:gap-6">
+              <button
+                onClick={() => setWeekOffset((w) => w - 1)}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-glass border border-glass-border shadow-sm hover:bg-glass-strong hover:shadow-md transition-all text-primary"
+                aria-label="Previous Week"
+              >
+                <ChevronLeft size={22} strokeWidth={2.5} />
+              </button>
+              
+              <div className="text-center min-w-[140px]">
+                <p className="text-base font-bold text-foreground">
+                  {weekDays.length > 0
+                    ? `${formatDateShort(weekDays.filter(d => !isWeekend(d.date))[0]?.date || weekRange.start)} – ${formatDateShort(weekDays.filter(d => !isWeekend(d.date)).slice(-1)[0]?.date || weekRange.end)}`
+                    : `${formatDateShort(weekRange.start)} – ${formatDateShort(weekRange.end)}`}
+                </p>
               </div>
-            </div>
 
-            <button
-              onClick={() => setWeekOffset((w) => w + 1)}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors text-[#FFFFFF]"
-            >
-              <span className="hidden sm:inline">Next</span>
-              <ChevronRight size={16} color="#FFFFFF" strokeWidth={2.5} />
-            </button>
+              <button
+                onClick={() => setWeekOffset((w) => w + 1)}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-glass border border-glass-border shadow-sm hover:bg-glass-strong hover:shadow-md transition-all text-primary"
+                aria-label="Next Week"
+              >
+                <ChevronRight size={22} strokeWidth={2.5} />
+              </button>
+            </div>
+            
+            <div className="flex items-center justify-center gap-3 w-full sm:w-auto">
+              <button
+                onClick={() => setViewMode('month')}
+                className="text-xs font-semibold px-4 py-2 rounded-full bg-primary text-primary-foreground shadow-sm hover:opacity-90 transition-all"
+              >
+                Show 1 Month
+              </button>
+              {weekOffset !== 0 && (
+                <button
+                  onClick={() => setWeekOffset(0)}
+                  className="text-xs text-primary font-medium hover:underline underline-offset-4 px-2"
+                >
+                  Go to current
+                </button>
+              )}
+            </div>
           </>
         ) : (
           <>
-            <button
-              onClick={() => setMonthOffset((m) => m - 1)}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors text-[#FFFFFF]"
-            >
-              <ChevronLeft size={16} color="#FFFFFF" strokeWidth={2.5} />
-              <span className="hidden sm:inline">Prev Month</span>
-            </button>
-
-            <div className="text-center flex-1">
-              <p className="text-sm font-semibold text-foreground mb-1">
-                {formatMonthYear(monthOffset === 0 ? today : addMonthsStr(today, monthOffset))}
-              </p>
-              <div className="flex items-center justify-center gap-3">
-                <button
-                  onClick={() => setViewMode('week')}
-                  className="text-xs font-semibold px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                >
-                  Show 1 Week
-                </button>
-                {monthOffset !== 0 && (
-                  <button
-                    onClick={() => setMonthOffset(0)}
-                    className="text-xs text-primary hover:underline"
-                  >
-                    Go to current
-                  </button>
-                )}
+            <div className="flex items-center justify-between w-full sm:w-auto gap-4 sm:gap-6">
+              <button
+                onClick={() => setMonthOffset((m) => m - 1)}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-glass border border-glass-border shadow-sm hover:bg-glass-strong hover:shadow-md transition-all text-primary"
+                aria-label="Previous Month"
+              >
+                <ChevronLeft size={22} strokeWidth={2.5} />
+              </button>
+              
+              <div className="text-center min-w-[140px]">
+                <p className="text-base font-bold text-foreground">
+                  {formatMonthYear(monthOffset === 0 ? today : addMonthsStr(today, monthOffset))}
+                </p>
               </div>
-            </div>
 
-            <button
-              onClick={() => setMonthOffset((m) => m + 1)}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors text-[#FFFFFF]"
-            >
-              <span className="hidden sm:inline">Next Month</span>
-              <ChevronRight size={16} color="#FFFFFF" strokeWidth={2.5} />
-            </button>
+              <button
+                onClick={() => setMonthOffset((m) => m + 1)}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-glass border border-glass-border shadow-sm hover:bg-glass-strong hover:shadow-md transition-all text-primary"
+                aria-label="Next Month"
+              >
+                <ChevronRight size={22} strokeWidth={2.5} />
+              </button>
+            </div>
+            
+            <div className="flex items-center justify-center gap-3 w-full sm:w-auto">
+              <button
+                onClick={() => setViewMode('week')}
+                className="text-xs font-semibold px-4 py-2 rounded-full bg-primary text-primary-foreground shadow-sm hover:opacity-90 transition-all"
+              >
+                Show 1 Week
+              </button>
+              {monthOffset !== 0 && (
+                <button
+                  onClick={() => setMonthOffset(0)}
+                  className="text-xs text-primary font-medium hover:underline underline-offset-4 px-2"
+                >
+                  Go to current
+                </button>
+              )}
+            </div>
           </>
         )}
       </div>

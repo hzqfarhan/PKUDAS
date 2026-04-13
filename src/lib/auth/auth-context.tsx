@@ -9,6 +9,7 @@ import {
   mockLogout,
   mockSetCurrentUser,
 } from '@/lib/mock-data';
+import { createClient } from '@/lib/supabase/client';
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -39,26 +40,88 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Restore session from localStorage
+  // Restore session from localStorage or Supabase
   useEffect(() => {
-    const stored = localStorage.getItem(SESSION_KEY);
-    if (stored) {
-      try {
-        const userId = JSON.parse(stored);
-        mockSetCurrentUser(userId);
-        const mockUser = mockGetCurrentUser();
-        if (mockUser) {
+    let mounted = true;
+    const supabase = createClient();
+
+    const initializeAuth = async () => {
+      // 1. Check Supabase first for real OAuth session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        if (mounted) {
           setUser({
-            id: mockUser.id,
-            email: mockUser.email,
-            profile: mockUser.profile,
+            id: session.user.id,
+            email: session.user.email || '',
+            profile: {
+              id: session.user.id,
+              full_name: session.user.user_metadata.full_name || 'Google User',
+              email: session.user.email || '',
+              avatar_url: session.user.user_metadata.avatar_url || null,
+              role: 'user',
+              matric_number: null,
+              faculty: null,
+              affiliation_type: null,
+              phone: null,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            } as Profile
           });
+          setLoading(false);
         }
-      } catch {
-        localStorage.removeItem(SESSION_KEY);
+        return;
       }
-    }
-    setLoading(false);
+      
+      // 2. Fallback to mock session
+      const stored = localStorage.getItem(SESSION_KEY);
+      if (stored) {
+        try {
+          const userId = JSON.parse(stored);
+          mockSetCurrentUser(userId);
+          const mockUser = mockGetCurrentUser();
+          if (mockUser && mounted) {
+            setUser({
+              id: mockUser.id,
+              email: mockUser.email,
+              profile: mockUser.profile,
+            });
+          }
+        } catch {
+          localStorage.removeItem(SESSION_KEY);
+        }
+      }
+      if (mounted) setLoading(false);
+    };
+
+    initializeAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session && mounted) {
+        setUser({
+          id: session.user.id,
+          email: session.user.email || '',
+          profile: {
+            id: session.user.id,
+            full_name: session.user.user_metadata.full_name || 'Google User',
+            email: session.user.email || '',
+            avatar_url: session.user.user_metadata.avatar_url || null,
+            role: 'user',
+            matric_number: null,
+            faculty: null,
+            affiliation_type: null,
+            phone: null,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          } as Profile
+        });
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
@@ -77,18 +140,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const loginWithGoogle = useCallback(async () => {
-    // We simulate a Google login by automatically creating or choosing a dummy user
-    const result = (await import('@/lib/mock-data')).mockGoogleLogin();
-    if (result.error || !result.user) {
-      return { error: result.error || 'Google login failed' };
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      return { error: error.message };
     }
-    const authUser: AuthUser = {
-      id: result.user.id,
-      email: result.user.email,
-      profile: result.user.profile,
-    };
-    setUser(authUser);
-    localStorage.setItem(SESSION_KEY, JSON.stringify(result.user.id));
+    
+    // Auth state change will handle setUser
     return { error: null };
   }, []);
 
@@ -120,7 +184,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     []
   );
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+
     mockLogout();
     setUser(null);
     localStorage.removeItem(SESSION_KEY);
